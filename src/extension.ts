@@ -183,12 +183,17 @@ export function activate(context: vscode.ExtensionContext) {
   let blinkTimer: ReturnType<typeof setInterval> | undefined;
   let wasAlerting = false;
 
+  function getCostlyRequestThresholdCents(): number {
+    return Math.round((vscode.workspace.getConfiguration('cursorSpendTracker').get<number>('costlyRequestThreshold') ?? 2.0) * 100);
+  }
+
   function hasRecentExpensiveRequest(events: UsageEvent[] | undefined): boolean {
     if (!events) { return false; }
     const cutoff = Date.now() - 20 * 60 * 1000;
+    const threshold = getCostlyRequestThresholdCents();
     for (const e of events) {
       const ts = parseInt(e.timestamp);
-      if (ts >= cutoff && e.chargedCents >= 200) {
+      if (ts >= cutoff && e.chargedCents >= threshold) {
         return true;
       }
     }
@@ -261,12 +266,13 @@ export function activate(context: vscode.ExtensionContext) {
     const twoHoursAgo = Date.now() - 2 * 3600 * 1000;
     let last2hReqs = 0, last2hCents = 0;
     const expensiveEvents: { model: string; cents: number }[] = [];
+    const thresholdCents = getCostlyRequestThresholdCents();
     for (const e of evts) {
       const ts = parseInt(e.timestamp);
       if (ts >= twoHoursAgo) {
         last2hReqs++;
         last2hCents += e.chargedCents;
-        if (e.chargedCents >= 100) {
+        if (e.chargedCents >= thresholdCents) {
           expensiveEvents.push({ model: e.model, cents: e.chargedCents });
         }
       }
@@ -277,7 +283,8 @@ export function activate(context: vscode.ExtensionContext) {
     const topExpensive = expensiveEvents.slice(0, 5);
     let expensiveRows = '';
     if (topExpensive.length > 0) {
-      expensiveRows = `\n\n**Top costly requests (2h, >$1)**\n\n` +
+      const thresholdDollars = (thresholdCents / 100).toFixed(2).replace(/\.00$/, '');
+      expensiveRows = `\n\n**Top costly requests (2h, >$${thresholdDollars})**\n\n` +
         `| Model | Cost |\n|---|---|\n` +
         topExpensive.map(e => `| ${e.model} | ${fmtDollars(e.cents)} |`).join('\n');
     }

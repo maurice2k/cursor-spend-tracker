@@ -11,7 +11,7 @@ A VS Code extension that displays your Cursor on-demand spending in the status b
 - 💰 **Real-time Spending Display** - See your Cursor on-demand costs right in the status bar
 - 📊 **Daily Statistics** - View today's, yesterday's, and last 2 hours usage in the tooltip
 - ⚡ **Included Quota Tracking** - Monitor your included request quota usage
-- 🔔 **Alerts for Expensive Requests** - Visual alerts when you make expensive requests (>$2)
+- 🔔 **Alerts for Expensive Requests** - Visual alerts when you make expensive requests (configurable threshold, default: >$2)
 - 🔄 **Auto-refresh** - Configurable refresh interval (default: 5 minutes)
 
 ## Installation
@@ -43,6 +43,7 @@ After installation, the extension automatically shows your current spend in the 
 | Setting | Default | Description |
 |--------|---------|-------------|
 | `cursorSpendTracker.refreshIntervalSeconds` | `300` | How often to refresh usage data (in seconds) |
+| `cursorSpendTracker.costlyRequestThreshold` | `2.0` | Threshold in USD for costly request alerts and tracking |
 
 ## Preview
 

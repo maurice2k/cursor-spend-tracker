@@ -1,0 +1,51 @@
+{
+  "name": "cursor-spend-tracker",
+  "displayName": "Cursor Spend Tracker",
+  "description": "Shows your Cursor on-demand spending in the status bar",
+  "version": "0.0.0-dev",
+  "icon": "images/icon128.png",
+  "author": "Moritz Fain <moritz@fain.io> (https://github.com/maurice2k)",
+  "publisher": "maurice2k",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/maurice2k/cursor-spend-tracker"
+  },
+  "homepage": "https://github.com/maurice2k/cursor-spend-tracker",
+  "engines": { "vscode": "^1.85.0" },
+  "categories": ["Other"],
+  "activationEvents": ["onStartupFinished"],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "configuration": {
+      "title": "Cursor Spend Tracker",
+      "properties": {
+        "cursorSpendTracker.refreshIntervalSeconds": {
+          "type": "number",
+          "default": 300,
+          "description": "How often to refresh usage data (in seconds)"
+        }
+      }
+    },
+    "commands": [
+      {
+        "command": "cursorSpendTracker.refresh",
+        "title": "Cursor Spend: Refresh Now"
+      },
+      {
+        "command": "cursorSpendTracker.openDashboard",
+        "title": "Cursor Spend: Open Dashboard"
+      }
+    ]
+  },
+  "scripts": {
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "package": "vsce package",
+    "publish": "vsce publish"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/vscode": "^1.85.0",
+    "typescript": "^5.3.0"
+  }
+}
